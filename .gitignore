@@ -1,0 +1,5 @@
+.vscode/launch.json
+king/__pycache__/agente_src.cpython-36.pyc
+king/__pycache__/cartas_src.cpython-36.pyc
+king/__pycache__/jogador_src.cpython-36.pyc
+king/__pycache__/jogo_src.cpython-36.pyc

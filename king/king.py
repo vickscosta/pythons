@@ -26,21 +26,6 @@ baralho_0=cartas_class(_baralho)
 king=jogo_class()
 jogador=[jogador_class(idx) for idx in range(4)]
 
-def ordena_cartas(jogador):
-        for idx,j in enumerate(jogador):
-            cartas_ordenadas=[]
-            for naipe in 'POEC':
-                cartas_naipe=[j[i] for i in range(13) if j[i][2]==naipe]
-                cartas_naipe.sort(key=get_value)
-                cartas_ordenadas+=cartas_naipe
-            jogador[idx]=cartas_ordenadas
-        return jogador
-
-def mostra_cartas_dos_jogadores(jogador):
-    for x in range(4):
-        print('jogador ',x)
-        print(mostra_cartas(jogador[x]))
-
 def calcula_cartas_candidatas(mao,primeira_carta_jogada):
     
     candidatas=[]
@@ -331,20 +316,11 @@ def actualiza_pontos_copas(pontos, vencedor,vaza):
             pontos[idx]+=0
     return pontos
 
-# def init_game(lista_cartas):
-#     ronda=1
-#     cartas_distib=copy.deepcopy(lista_cartas)
-#     random.shuffle(cartas_distib)
-#     jogador=[[] for i in range(4)]
-#     pontos=[0 for i in range(4)]
-#     for j in range(4):
-#         for i in range(13):
-#             jogador[j].append(cartas_distib.pop())
-#     jogador=ordena_cartas(jogador)
-#     mostra_cartas_dos_jogadores(jogador)
+def mostra_cartas_dos_jogadores(jogadores):
 
-#     return ronda, jogador, pontos
-
+    for j in jogadores:
+        print('P', j.idx,':',j.mao.mostra_cartas())
+    return
 
 score_list=[]
 for game in range(1):
@@ -352,8 +328,8 @@ for game in range(1):
     print('***************** NAO FAZER VAZAS *****************')
     king.Começa_partida(baralho_0,jogador)
     
-    ronda, jogador, pontos = init_game(lista_cartas)
-    
+    mostra_cartas_dos_jogadores(jogador)
+
     for ronda in range(13):
         print('\nRONDA:',ronda+1)
         primeira_carta_jogada=[]

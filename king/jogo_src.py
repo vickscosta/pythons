@@ -11,14 +11,8 @@ class jogo_class():
         self.ronda=1
         baralho=copy.deepcopy(baralho_)
         baralho.baralha()
+        [j.apanha_mao(cartas_class(baralho.distribui_13_cartas())) for j in jogador]
 
-        for _ in range(4):
-            mao=cartas_class(baralho.distribui_13_cartas())
-            pass
-
-
-        #     jogador[j].junta_carta(self.cartas_distib.pop())
-        #     jogador[j]=ordena_cartas()
-        # mostra_cartas_dos_jogadores(jogador)
-
-        # return
+        # for i in range(4):
+            # mao=cartas_class(baralho.distribui_13_cartas())
+            # jogador[i].apanha_mao(cartas_class(baralho.distribui_13_cartas()))

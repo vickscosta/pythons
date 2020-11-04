@@ -33,16 +33,9 @@ class cartas_class():
 
         self.saco=saco
 
-
-    def distribui_13_cartas(self):
-               
+    def distribui_13_cartas(self):      
         return [self.saco.pop() for _ in range(13)]
 
-    # def ordena_cartas(self):
-        
-    #     cartas_naipe.sort(key=get_value)
-    #     cartas_ordenadas+=cartas_naipe
-    
-    # def mostra_cartas(self):
-    #     return[i['carta'] for i in self]
+    def mostra_cartas(self):
+        return [i['carta'] for i in self.saco]
 
