@@ -9,22 +9,13 @@ def get_value(carta):
 
 class cartas_class():
 
-    def __init__(self,cartas):
+    def __init__(self,cartas=None):
+        if cartas is None:
+            self.saco=[]
+        else:
+            self.saco=cartas
 
-        self.nb=len(cartas)
-        self.copas=[c for c in cartas if c['naipe']=='C']
-        self.copas.sort(key=get_value)
-        self.espadas=[c for c in cartas if c['naipe']=='E']
-        self.espadas.sort(key=get_value)
-        self.ouros=[c for c in cartas if c['naipe']=='O']
-        self.ouros.sort(key=get_value)
-        self.paus=[c for c in cartas if c['naipe']=='P']
-        self.paus.sort(key=get_value)
-        self.nb_copas=len(self.copas)
-        self.nb_espadas=len(self.espadas)
-        self.nb_ouros=len(self.ouros)
-        self.nb_paus=len(self.paus)
-        self.saco=cartas
+        self.actualisa_saco()
 
     def baralha(self):
 
@@ -39,3 +30,25 @@ class cartas_class():
     def mostra_cartas(self):
         return [i['carta'] for i in self.saco]
 
+    def junta_cartas(self,cartas):
+        if type(cartas)==dict:
+            self.saco.append(cartas)
+        elif type(cartas)==cartas_class:
+            for c in cartas.saco:
+                self.saco.append(c)
+        self.actualisa_saco()
+    
+    def actualisa_saco(self):
+        self.nb=len(self.saco)
+        self.copas=[c for c in self.saco if c['naipe']=='C']
+        self.copas.sort(key=get_value)
+        self.espadas=[c for c in self.saco if c['naipe']=='E']
+        self.espadas.sort(key=get_value)
+        self.ouros=[c for c in self.saco if c['naipe']=='O']
+        self.ouros.sort(key=get_value)
+        self.paus=[c for c in self.saco if c['naipe']=='P']
+        self.paus.sort(key=get_value)
+        self.nb_copas=len(self.copas)
+        self.nb_espadas=len(self.espadas)
+        self.nb_ouros=len(self.ouros)
+        self.nb_paus=len(self.paus)

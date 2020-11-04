@@ -28,23 +28,6 @@ baralho_0=cartas_class(_baralho)
 king=jogo_class()
 jogador=[jogador_class(idx) for idx in range(4)]
 
-def calcula_cartas_candidatas(mao,primeira_carta_jogada):
-    
-    candidatas=[]
-    balda=False
-    for carta in mao:
-        if len(primeira_carta_jogada)==0:
-            candidatas.append(carta)
-        elif carta[2] == primeira_carta_jogada[2]:
-            candidatas.append(carta)
-
-    #caso das baldas
-    if len(candidatas)==0:
-        candidatas=mao
-        balda=True                
-
-    return candidatas,balda
-
 def calcula_cartas_candidatas_copas(mao,primeira_carta_jogada,copas_flag):
     
     candidatas=[]
@@ -271,26 +254,6 @@ def joga_carta_copas(cartas,gajo,balda,lista_cartas,vaza,flag):
     
     return carta_escolhida
 
-def calcula_quem_ganhou_a_vaza(puxada,vaza):
-
-    best=puxada
-    best_idx=None
-    for idx,carta in enumerate(vaza):
-        if carta[2]==puxada[2]:
-            if carta[1]>=best[1]:
-                best=carta
-                best_idx=idx
-    return best_idx
-
-def actualiza_pontos(pontos, vencedor):
-
-    for idx in range(4):
-        if idx==vencedor:
-            pontos[idx]+=20
-        else:
-            pontos[idx]+=0
-    return pontos
-
 def actualiza_pontos_copas(pontos, vencedor,vaza):
 
     conta_copas=0
@@ -322,11 +285,12 @@ for game in range(1):
 
     king.começa_partida(jogador)
 
-    pass
+    print('\n')
+    print([j.pontos for j in jogador])
 
-    for ronda in range(13):
-        print('\nRONDA:',king.ronda+1)
-        print('\nComeça o jogador',king.primeiro_a_jogar)
+    # for ronda in range(13):
+    #     print('\nRONDA:',king.ronda+1)
+    #     print('\nComeça o jogador',king.primeiro_a_jogar)
         
         # else:
         #     ordem=get_order(vencedor_vaza)
