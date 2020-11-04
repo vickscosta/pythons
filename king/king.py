@@ -1,6 +1,8 @@
 # import random
 # import copy
 
+VER_CARTAS_AO_INICIO=False
+
 lista_copas=[('AC',14,'C'),('2C',2,'C'),('3C',3,'C'),('4C',4,'C'),('5C',5,'C'),('6C',6,'C'),('7C',7,'C'),('8C',8,'C'),('9C',9,'C'),('10C',10,'C'),('VC',11,'C'),('DC',12,'C'),('KC',13,'C')]
 lista_paus=[('AP',14,'P'),('2P',2,'P'),('3P',3,'P'),('4P',4,'P'),('5P',5,'P'),('6P',6,'P'),('7P',7,'P'),('8P',8,'P'),('9P',9,'P'),('10P',10,'P'),('VP',11,'P'),('DP',12,'P'),('KP',13,'P')]
 lista_espadas=[('AE',14,'E'),('2E',2,'E'),('3E',3,'E'),('4E',4,'E'),('5E',5,'E'),('6E',6,'E'),('7E',7,'E'),('8E',8,'E'),('9E',9,'E'),('10E',10,'E'),('VE',11,'E'),('DE',12,'E'),('KE',13,'E')]
@@ -64,19 +66,6 @@ def calcula_cartas_candidatas_copas(mao,primeira_carta_jogada,copas_flag):
         balda=True
 
     return candidatas,balda
-
-def get_order(starting_player=-1):
-    if starting_player==-1 :
-        starting_player=random.randint(0,3)
-    
-    if starting_player==0:
-        return [0,1,2,3]
-    elif starting_player==1:
-        return [1,2,3,0]
-    elif starting_player==2:
-        return [2,3,0,1]
-    elif starting_player==3:
-        return [3,0,1,2]
 
 def calcula_maior_carta(cartas):
 
@@ -316,6 +305,7 @@ def actualiza_pontos_copas(pontos, vencedor,vaza):
             pontos[idx]+=0
     return pontos
 
+# **************************************************************************************************
 def mostra_cartas_dos_jogadores(jogadores):
 
     for j in jogadores:
@@ -325,91 +315,96 @@ def mostra_cartas_dos_jogadores(jogadores):
 score_list=[]
 for game in range(1):
 
-    print('***************** NAO FAZER VAZAS *****************')
-    king.Começa_partida(baralho_0,jogador)
+    king.prepara_partida(baralho_0,jogador)
     
-    mostra_cartas_dos_jogadores(jogador)
+    if VER_CARTAS_AO_INICIO:
+        mostra_cartas_dos_jogadores(jogador) 
+
+    king.começa_partida(jogador)
+
+    pass
 
     for ronda in range(13):
-        print('\nRONDA:',ronda+1)
-        primeira_carta_jogada=[]
-        vaza=[]
-        if ronda==0:
-            ordem=get_order()
-            print('\nComeça o jogador',ordem[0])
-        else:
-            ordem=get_order(vencedor_vaza)
-            print('\nComeça o jogador',ordem[0])
-        for posicao in range(4):
-            cartas_candidatas,balda=calcula_cartas_candidatas(jogador[ordem[posicao]],primeira_carta_jogada)
-            carta_jogada=joga_carta_vazas(cartas_candidatas,ordem[posicao],balda,lista_cartas,vaza)
-            jogador[ordem[posicao]].remove(carta_jogada)
-            vaza.append(carta_jogada)
-            print('O jogador',ordem[posicao],'jogou a carta',carta_jogada[0])
+        print('\nRONDA:',king.ronda+1)
+        print('\nComeça o jogador',king.primeiro_a_jogar)
+        
+        # else:
+        #     ordem=get_order(vencedor_vaza)
+        #     print('\nComeça o jogador',ordem[0])
+        # for posicao in range(4):
+        #     cartas_candidatas,balda=calcula_cartas_candidatas(jogador[ordem[posicao]],primeira_carta_jogada)
+        #     carta_jogada=joga_carta_vazas(cartas_candidatas,ordem[posicao],balda,lista_cartas,vaza)
+        #     jogador[ordem[posicao]].remove(carta_jogada)
+        #     vaza.append(carta_jogada)
+        #     print('O jogador',ordem[posicao],'jogou a carta',carta_jogada[0])
 
-            if len(primeira_carta_jogada)==0:
-                primeira_carta_jogada=carta_jogada
+        #     if len(primeira_carta_jogada)==0:
+        #         primeira_carta_jogada=carta_jogada
 
-        vencedor_vaza=ordem[calcula_quem_ganhou_a_vaza(primeira_carta_jogada,vaza)]
-        pontos=actualiza_pontos(pontos,vencedor_vaza)
+        # vencedor_vaza=ordem[calcula_quem_ganhou_a_vaza(primeira_carta_jogada,vaza)]
+        # pontos=actualiza_pontos(pontos,vencedor_vaza)
+
+        # ipdateking
+
+
     
-    print('\nPontos vazas',pontos,'\n')
-    pontos_vazas=copy.deepcopy(pontos)
+#     print('\nPontos vazas',pontos,'\n')
+#     pontos_vazas=copy.deepcopy(pontos)
 
-    print('***************** NAO FAZER COPAS *****************')
-    ronda, jogador, pontos = init_game(lista_cartas)
-    copas_flag=False
+#     print('***************** NAO FAZER COPAS *****************')
+#     ronda, jogador, pontos = init_game(lista_cartas)
+#     copas_flag=False
 
-    for ronda in range(13):
-        print('\nRONDA:',ronda+1)
-        primeira_carta_jogada=[]
-        vaza=[]
-        if ronda==0:
-            ordem=get_order()
-            print('\nComeça o jogador',ordem[0])
-        else:
-            ordem=get_order(vencedor_vaza)
-            print('\nComeça o jogador',ordem[0])
-        for posicao in range(4):
-            cartas_candidatas,balda=calcula_cartas_candidatas_copas(jogador[ordem[posicao]],primeira_carta_jogada,copas_flag)
-            carta_jogada=joga_carta_copas(cartas_candidatas,ordem[posicao],balda,lista_cartas,vaza,copas_flag)
-            jogador[ordem[posicao]].remove(carta_jogada)
-            vaza.append(carta_jogada)
-            print('O jogador',ordem[posicao],'jogou a carta',carta_jogada[0])
+#     for ronda in range(13):
+#         print('\nRONDA:',ronda+1)
+#         primeira_carta_jogada=[]
+#         vaza=[]
+#         if ronda==0:
+#             ordem=get_order()
+#             print('\nComeça o jogador',ordem[0])
+#         else:
+#             ordem=get_order(vencedor_vaza)
+#             print('\nComeça o jogador',ordem[0])
+#         for posicao in range(4):
+#             cartas_candidatas,balda=calcula_cartas_candidatas_copas(jogador[ordem[posicao]],primeira_carta_jogada,copas_flag)
+#             carta_jogada=joga_carta_copas(cartas_candidatas,ordem[posicao],balda,lista_cartas,vaza,copas_flag)
+#             jogador[ordem[posicao]].remove(carta_jogada)
+#             vaza.append(carta_jogada)
+#             print('O jogador',ordem[posicao],'jogou a carta',carta_jogada[0])
 
-            if carta_jogada in lista_copas:
-               copas_flag=True
+#             if carta_jogada in lista_copas:
+#                copas_flag=True
            
-            if len(primeira_carta_jogada)==0:
-                primeira_carta_jogada=carta_jogada
+#             if len(primeira_carta_jogada)==0:
+#                 primeira_carta_jogada=carta_jogada
 
-        vencedor_vaza=ordem[calcula_quem_ganhou_a_vaza(primeira_carta_jogada,vaza)]
-        pontos=actualiza_pontos_copas(pontos,vencedor_vaza,vaza)
+#         vencedor_vaza=ordem[calcula_quem_ganhou_a_vaza(primeira_carta_jogada,vaza)]
+#         pontos=actualiza_pontos_copas(pontos,vencedor_vaza,vaza)
     
-    pontos_copas=copy.deepcopy(pontos)
-    print('\nPontos Copas',pontos)
+#     pontos_copas=copy.deepcopy(pontos)
+#     print('\nPontos Copas',pontos)
     
-    total_pontos=[0,0,0,0]
-    for i in range(4):
-        total_pontos[i]=pontos_vazas[i]+pontos_copas[i]
+#     total_pontos=[0,0,0,0]
+#     for i in range(4):
+#         total_pontos[i]=pontos_vazas[i]+pontos_copas[i]
 
-    print('\nTotal pontos',total_pontos)
+#     print('\nTotal pontos',total_pontos)
 
 
 
-    score_list.append(pontos)
+#     score_list.append(pontos)
 
-avg_score=[0,0,0,0]
-sum_score=[0,0,0,0]
-for score in score_list:
-    for idx,j in enumerate(score):
-        sum_score[idx]+=j
+# avg_score=[0,0,0,0]
+# sum_score=[0,0,0,0]
+# for score in score_list:
+#     for idx,j in enumerate(score):
+#         sum_score[idx]+=j
 
-for i in range(4):
-    avg_score[i]=sum_score[i]/len(score_list)
+# for i in range(4):
+#     avg_score[i]=sum_score[i]/len(score_list)
 
-#print('\n',score_list)   
-print('\n',avg_score)
+# #print('\n',score_list)   
+# print('\n',avg_score)
     
 
 
