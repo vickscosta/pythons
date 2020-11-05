@@ -14,15 +14,14 @@ class cartas_class():
             self.saco=[]
         else:
             self.saco=cartas
-
-        self.actualisa_saco()
+        self.actualiza_saco()
+        return
 
     def baralha(self):
-
         saco=[c for c in self.saco]
         random.shuffle(saco)
-
         self.saco=saco
+        return
 
     def distribui_13_cartas(self):      
         return [self.saco.pop() for _ in range(13)]
@@ -36,9 +35,9 @@ class cartas_class():
         elif type(cartas)==cartas_class:
             for c in cartas.saco:
                 self.saco.append(c)
-        self.actualisa_saco()
+        self.actualiza_saco()
     
-    def actualisa_saco(self):
+    def actualiza_saco(self):
         self.nb=len(self.saco)
         self.copas=[c for c in self.saco if c['naipe']=='C']
         self.copas.sort(key=get_value)

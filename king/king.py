@@ -19,36 +19,10 @@ from jogo_src import jogo_class
 from agente_src import agente_class
 from jogador_src import jogador_class
 
-copas=cartas_class(_copas)
-paus=cartas_class(_paus)
-espadas=cartas_class(_espadas)
-ouros=cartas_class(_ouros)
 baralho_0=cartas_class(_baralho)
 
 king=jogo_class()
 jogador=[jogador_class(idx) for idx in range(4)]
-
-def calcula_cartas_candidatas_copas(mao,primeira_carta_jogada,copas_flag):
-    
-    candidatas=[]
-    balda=False
-    for carta in mao:
-        if len(primeira_carta_jogada)==0: 
-            if copas_flag==False:
-                if carta not in lista_copas:
-                    candidatas.append(carta)
-            elif copas_flag==True:
-                candidatas.append(carta)
-
-        elif carta[2] == primeira_carta_jogada[2]:
-            candidatas.append(carta)
-
-    #caso das baldas
-    if len(candidatas)==0:
-        candidatas=mao
-        balda=True
-
-    return candidatas,balda
 
 def calcula_maior_carta(cartas):
 
@@ -254,20 +228,6 @@ def joga_carta_copas(cartas,gajo,balda,lista_cartas,vaza,flag):
     
     return carta_escolhida
 
-def actualiza_pontos_copas(pontos, vencedor,vaza):
-
-    conta_copas=0
-    for carta in vaza:
-        if carta in lista_copas:
-            conta_copas+=1
-    
-    for idx in range(4):
-        if idx==vencedor:
-            pontos[idx]+=20*conta_copas
-        else:
-            pontos[idx]+=0
-    return pontos
-
 # **************************************************************************************************
 def mostra_cartas_dos_jogadores(jogadores):
 
@@ -276,7 +236,7 @@ def mostra_cartas_dos_jogadores(jogadores):
     return
 
 score_list=[]
-for game in range(1):
+for game in range(6):
 
     king.prepara_partida(baralho_0,jogador)
     
@@ -286,7 +246,8 @@ for game in range(1):
     king.começa_partida(jogador)
 
     print('\n')
-    print([j.pontos for j in jogador])
+    print(king.nome_partida, [j.pontos_partida for j in jogador])
+    print('Total',[j.pontos for j in jogador])
 
     # for ronda in range(13):
     #     print('\nRONDA:',king.ronda+1)
