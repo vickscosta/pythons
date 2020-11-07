@@ -47,7 +47,7 @@ class jogo_class():
                 jogador[self.ordem[posicao]].calcula_cartas_candidatas(self.nome_partida,primeira_carta_jogada)
                 carta_jogada=jogador[self.ordem[posicao]].joga_carta(self.nome_partida,primeira_carta_jogada)
                 jogador[self.ordem[posicao]].retira_carta(carta_jogada)
-                vaza.junta_cartas(carta_jogada)
+                vaza.junta_cartas(carta_jogada,actualisar=False)
                 print('O jogador',self.ordem[posicao],'jogou a carta',carta_jogada['carta'])
 
                 if primeira_carta_jogada is None:
@@ -56,6 +56,7 @@ class jogo_class():
             self.cartas_que_ja_sairam.junta_cartas(vaza)
             vencedor_vaza=self.ordem[self.calcula_quem_ganhou_a_vaza(primeira_carta_jogada,vaza)]
             self.primeiro_a_jogar_ronda=vencedor_vaza
+            vaza.actualiza_saco()
             jogador[vencedor_vaza].actualiza_pontos_ronda(vaza,self.nome_partida,self.ronda)
 
         [j.actualiza_pontos_total() for j in jogador]

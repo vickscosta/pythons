@@ -1,11 +1,12 @@
 import random
 from cartas_src import cartas_class
+from agente_src import agente_class
 
 class jogador_class():
 
-    def __init__(self,idx):
+    def __init__(self,idx,tipo):
         self.idx=idx
-        self.agente='Humano'
+        self.agente=agente_class(tipo)
         self.pontos_partida=0
         self.pontos=0
         return
@@ -42,9 +43,8 @@ class jogador_class():
         return
 
     def joga_carta(self,nome_partida,primeira_carta_jogada=None):
-        escolha=random.randint(0,self.cartas_candidatas.nb-1)
-        carta_escolhida=self.cartas_candidatas.saco[escolha]
-        return carta_escolhida
+        
+        return self.agente.escolhe_carta(self.mao,self.cartas_candidatas,nome_partida,primeira_carta_jogada)
 
     def retira_carta(self,carta):
         self.mao.saco.remove(carta)
