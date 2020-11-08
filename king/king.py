@@ -1,7 +1,7 @@
 # import random
 # import copy
 
-VER_CARTAS_AO_INICIO=True
+VER_CARTAS_AO_INICIO=False
 
 # lista_copas=[('AC',14,'C'),('2C',2,'C'),('3C',3,'C'),('4C',4,'C'),('5C',5,'C'),('6C',6,'C'),('7C',7,'C'),('8C',8,'C'),('9C',9,'C'),('10C',10,'C'),('VC',11,'C'),('DC',12,'C'),('KC',13,'C')]
 # lista_paus=[('AP',14,'P'),('2P',2,'P'),('3P',3,'P'),('4P',4,'P'),('5P',5,'P'),('6P',6,'P'),('7P',7,'P'),('8P',8,'P'),('9P',9,'P'),('10P',10,'P'),('VP',11,'P'),('DP',12,'P'),('KP',13,'P')]
@@ -27,17 +27,8 @@ king=jogo_class()
 jogador=[None for _ in range(4)]
 jogador[0]=jogador_class(0,'Burro')
 jogador[1]=jogador_class(1,'Burro')
-jogador[2]=jogador_class(2,'Burro')
-jogador[3]=jogador_class(3,'Burro')
-
-def calcula_maior_carta(cartas):
-
-    maior_carta=cartas[0]
-    for carta in cartas:
-        if carta[1]>=maior_carta[1]:
-            maior_carta=carta
-
-    return maior_carta
+jogador[2]=jogador_class(2,'Medricas')
+jogador[3]=jogador_class(3,'Medricas')
 
 def calcula_maior_carta_copas(cartas):
 
@@ -56,19 +47,6 @@ def calcula_maior_carta_copas(cartas):
         maior_carta=calcula_maior_carta(cartas)
 
     return maior_carta
-
-def calcula_maior_carta_menor_mesa(cartas,vaza):
-
-    melhor_carta=cartas[0]
-    if len(vaza)==0:
-        return melhor_carta    
-    else:
-        for carta in cartas:
-            for carta_outro_jogador in vaza:
-                if carta[1]>=melhor_carta[1] and carta[1]<carta_outro_jogador[1]:
-                    melhor_carta=carta
-
-    return melhor_carta
 
 def calcula_maior_carta_menor_mesa_especial(cartas,vaza):
 

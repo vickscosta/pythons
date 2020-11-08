@@ -59,6 +59,12 @@ class cartas_class():
         self.nb_espadas=len(self.espadas)
         self.nb_ouros=len(self.ouros)
         self.nb_paus=len(self.paus)
+        self.damas=[c for c in self.saco if c['valor']==12]
+        self.nb_damas=len(self.damas)
+        self.homens=[c for c in self.saco if (c['valor']==11 or c['valor']==13)]
+        self.nb_homens=len(self.homens)
+        self.king=[c for c in self.saco if c['carta']=='KC']
+        self.nb_king=len(self.king)
         self.saco=self.paus+self.ouros+self.espadas+self.copas
 
 baralho_0=cartas_class(_baralho)
@@ -67,3 +73,8 @@ class baralho_class():
     def __init__(self):
         self.cartas=baralho_0
         return
+
+    def atribui_carta(self,carta_a_encontrar):
+        for carta in self.cartas.saco:
+            if carta['carta']==carta_a_encontrar:
+                return carta

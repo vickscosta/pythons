@@ -42,9 +42,9 @@ class jogador_class():
             self.balda=True
         return
 
-    def joga_carta(self,nome_partida,primeira_carta_jogada=None):
+    def joga_carta(self,nome_partida,vaza,primeira_carta_jogada=None):
         
-        return self.agente.escolhe_carta(self.mao,self.cartas_candidatas,nome_partida,primeira_carta_jogada)
+        return self.agente.escolhe_carta(self.mao,self.cartas_candidatas,self.balda,vaza,nome_partida,primeira_carta_jogada)
 
     def retira_carta(self,carta):
         self.mao.saco.remove(carta)
@@ -64,23 +64,16 @@ class jogador_class():
             self.pontos_partida+=20*vaza.nb_copas
         
         elif partida=='Damas':
-            damas=0
-            for c in vaza.saco:
-                if c['valor']==12:
-                    damas+=1
-            self.pontos_partida+=50*damas
+            if vaza.nb_damas>0:
+                self.pontos_partida+=50*vaza.nb_damas
         
         elif partida=='Homens':
-            homens=0
-            for c in vaza.saco:
-                if c['valor']==11 or c['valor']==13:
-                    homens+=1
-            self.pontos_partida+=30*homens
+            if vaza.nb_homens>0:
+                self.pontos_partida+=30*vaza.nb_homens
         
         elif partida=='King':
-            for c in vaza.saco:
-                if c['carta']=='KC':
-                    self.pontos_partida=160
+            if vaza.nb_king>0:
+                self.pontos_partida=160
         
         elif partida=='2 ultimas':
             if ronda==11 or ronda==12:
