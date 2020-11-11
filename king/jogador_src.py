@@ -42,9 +42,9 @@ class jogador_class():
             self.balda=True
         return
 
-    def joga_carta(self,nome_partida,vaza,primeira_carta_jogada=None):
+    def joga_carta(self,nome_partida,vaza,cartas_que_ja_sairam,primeira_carta_jogada=None):
         
-        return self.agente.escolhe_carta(self.mao,self.cartas_candidatas,self.balda,vaza,nome_partida,primeira_carta_jogada)
+        return self.agente.escolhe_carta(self.mao,self.cartas_candidatas,self.balda,vaza,nome_partida,cartas_que_ja_sairam,primeira_carta_jogada)
 
     def retira_carta(self,carta):
         self.mao.saco.remove(carta)
