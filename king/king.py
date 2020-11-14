@@ -9,61 +9,15 @@ VER_CARTAS_AO_INICIO=False
 
 baralho=baralho_class()
 
-
 # jogador=[jogador_class(idx) for idx in range(4)]
 jogador=[None for _ in range(4)]
 jogador[0]=jogador_class(0,'Especialista')
-jogador[1]=jogador_class(0,'Burro')
+jogador[1]=jogador_class(0,'Normal')
 jogador[2]=jogador_class(0,'Normal')
-jogador[3]=jogador_class(0,'Medricas')
+jogador[3]=jogador_class(0,'Normal')
 
 # 'Humano', 'Medricas', 'Normal', 'Burro', 'Especialista'
 
-def joga_carta_copas(cartas,gajo,balda,lista_cartas,vaza,flag):
-
-    # ESPECIALISTA
-    if gajo==1:
-        if balda==False:
-            carta_escolhida=calcula_maior_carta_menor_mesa_especial(cartas,vaza)            
-        else:
-            carta_escolhida=calcula_melhor_balda(cartas)
-
-    # CAGADO
-    elif gajo==2:
-        if balda==False:
-            carta_escolhida=cartas[0]
-        else:
-            carta_escolhida=calcula_maior_carta_copas(cartas)
-    
-    # NORMAL
-    elif gajo==3:
-        if balda==False:
-            carta_escolhida=calcula_maior_carta_menor_mesa(cartas,vaza)            
-        else:
-            carta_escolhida=calcula_maior_carta_copas(cartas)
-
-    # HUMANO
-    elif gajo==0:
-        escolha_ok=False
-        escolha_cand_ok=False
-        while escolha_ok==False or escolha_cand_ok==False:
-            print('\nEscolha uma carta\n',mostra_cartas(jogador[0]))
-            carta_manual=input()
-            carta_manual_completa,escolha_ok=calcula_carta_jogada_manual(carta_manual,lista_cartas)
-            if carta_manual_completa in cartas:
-                escolha_cand_ok=True
-                carta_escolhida=carta_manual_completa
-            else:
-                print('Carta Ilegal')
-
-    # ALEATORIO
-    else:
-        escolha=random.randint(0,len(cartas)-1)
-        carta_escolhida=cartas[escolha]
-    
-    return carta_escolhida
-
-# **************************************************************************************************
 def mostra_cartas_dos_jogadores(jogadores):
 
     for j in jogadores:
@@ -71,7 +25,7 @@ def mostra_cartas_dos_jogadores(jogadores):
     return
 
 score_list=[]
-NB_JOGOS=1
+NB_JOGOS=1000
 
 for nb_jogos_king in range(NB_JOGOS):
     king=jogo_class()
@@ -81,7 +35,7 @@ for nb_jogos_king in range(NB_JOGOS):
     print('*******  JOGO',nb_jogos_king,'*****************')
     print('*********************************')
     
-    for game in range(6):
+    for game in range(2):
 
         king.prepara_partida(baralho.cartas,jogador)
 

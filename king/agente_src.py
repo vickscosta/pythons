@@ -70,7 +70,16 @@ class agente_class():
             if balda==False:
                 carta_escolhida=self.calcula_maior_carta_menor_mesa_especial(cartas_candidatas,vaza,cartas_que_ja_sairam,nome_partida)
             else:
-                if nome_partida=='Copas' and cartas_candidatas.nb_copas>0:
+                if nome_partida=='Copas' and cartas_candidatas.nb_copas>4:
+                    cartas_candidatas_que_nao_sao_copas=cartas_class()
+                    cartas_candidatas_que_nao_sao_copas.junta_cartas(cartas_candidatas.ouros,False)
+                    cartas_candidatas_que_nao_sao_copas.junta_cartas(cartas_candidatas.paus,False)
+                    cartas_candidatas_que_nao_sao_copas.junta_cartas(cartas_candidatas.espadas,True)
+                    if cartas_candidatas_que_nao_sao_copas.nb==0:
+                         carta_escolhida=self.calcula_maior_carta(cartas_candidatas.copas)
+                    else:   
+                        carta_escolhida=self.calcula_melhor_balda_especial(cartas_candidatas_que_nao_sao_copas,vaza,cartas_que_ja_sairam)
+                elif nome_partida=='Copas' and cartas_candidatas.nb_copas>0:
                     carta_escolhida=self.calcula_maior_carta(cartas_candidatas.copas)
                 
                 elif nome_partida=='King' and cartas_candidatas.nb_king>0:
@@ -207,7 +216,7 @@ class agente_class():
                 melhor_min=c
                 melhor_naipe=idx
 
-        if nome_partida=='Vazas':
+        if nome_partida=='Vazas' or nome_partida=='Copas':
 
             if melhor_naipe==0:
                 if cartas.nb_paus>0:
@@ -225,9 +234,6 @@ class agente_class():
             if melhor_puxada is None:
                 melhor_puxada=self.calcula_menor_carta(cartas.saco)
         
-        elif nome_partida=='Copas': # isto não esta bom
-            melhor_puxada=self.calcula_melhor_balda(cartas) #maior carta do naipe menos frequente
-
         return melhor_puxada
 
     def calcula_cartas_que_ainda_nao_sairam(self,cartas,cartas_que_ja_sairam,vaza=None):

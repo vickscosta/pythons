@@ -42,6 +42,10 @@ class cartas_class():
         elif type(cartas)==cartas_class:
             for c in cartas.saco:
                 self.saco.append(c)
+        elif type(cartas)==list:
+            if len(cartas)>0:
+                for c in cartas:
+                    self.saco.append(c)
         if actualisar:
             self.actualiza_saco()
     
