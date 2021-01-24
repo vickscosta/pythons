@@ -25,7 +25,7 @@ BLUE=(0,0,255)
 
 screen_size = (1024,768)
 screen = pygame.display.set_mode(screen_size)
-screen.fill(BLUE)
+screen.fill(WHITE)
 
 matrix_height=int(1024/8)
 matrix_lenght=int(768/8)
@@ -34,7 +34,7 @@ nb_cells=matrix_height*matrix_height
 
 matrix=np.zeros(shape=(matrix_height,matrix_lenght),dtype=int)
 
-init_ratio=0.5
+init_ratio=0.3
 
 for idx in range(int(init_ratio*nb_cells)):
     matrix[random.randint(0,matrix_height-1)][random.randint(0,matrix_lenght-1)]=1
@@ -54,12 +54,12 @@ def matrix_draw(m_h,m_l,matrix,rect,color):
             elif matrix[h][l]==8:
                 rect_=rect.get_rect()
                 rect_.center=(h*8+4,l*8+4)
-                rect.fill(ORANGE)
+                rect.fill(BLACK)
                 screen.blit(rect,rect_)
             elif matrix[h][l]==4:
                 rect_=rect.get_rect()
                 rect_.center=(h*8+4,l*8+4)
-                rect.fill(BLACK)
+                rect.fill(GREEN)
                 screen.blit(rect,rect_)
 
 def count_n(m_h,m_l,matrix):
@@ -150,7 +150,7 @@ def feed_system(matrix,size,val):
     return matrix
 
 
-matrix_draw(matrix_height,matrix_lenght,matrix,rect,GREEN)
+matrix_draw(matrix_height,matrix_lenght,matrix,rect,RED)
 
 #main loop
 while running:
@@ -158,13 +158,13 @@ while running:
     pygame.display.flip()
     
     clock.tick(12)
-    screen.fill(BLUE)
+    screen.fill(WHITE)
 
     n_matrix=count_n(matrix_height,matrix_lenght,matrix)
 
     matrix=update_matrix(matrix_height,matrix_lenght,matrix,n_matrix)
 
-    matrix_draw(matrix_height,matrix_lenght,matrix,rect,GREEN)
+    matrix_draw(matrix_height,matrix_lenght,matrix,rect,RED)
 
     key = pygame.key.get_pressed()
 
