@@ -1,6 +1,6 @@
 """contains the starting position"""
 
-from config import piece_dct, UP, DOWN, LEFT, RIGHT, BLANK
+from config import  DOWN, LEFT, RIGHT, BLANK
 
 original_piece_map = [
     ("!", "face0", "rotation1", (0, 1)),

@@ -79,13 +79,12 @@ piece_dct = {
             "rotation2": [["-", LEFT]],
             "rotation3": [["I"], [UP]],
             },
-        # VERIFIER CETTE PIECE
         "face1": {
-            "rotation0": [[RIGHT, "-"]],
-            "rotation1": [[DOWN], ["I"]],
-            "rotation2": [["I", LEFT]],
-            "rotation3": [["I"], [UP]],
-            },        # ********************
+            "rotation0": [["I", BLANK]],
+            "rotation1": [["-"], [BLANK]],
+            "rotation2": [[BLANK, "I"]],
+            "rotation3": [[BLANK], ["-"]],
+            },
         "face2": {
             "rotation0": [[BLANK, BLANK]],
             "rotation1": [[BLANK], [BLANK]],

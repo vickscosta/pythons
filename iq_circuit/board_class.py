@@ -28,10 +28,9 @@ class BoardClass:
             return True
         return False
 
-    def set_piece(
-        self, set_block: str, set_piece_desc: list[list[str]], set_position: tuple[int]
-    ) -> None:
+    def set_piece(self, set_block: str, set_piece_desc: list, set_position: tuple) -> None:
         """writes into the matrix and the piece map"""
+
         for idx_ln, line in enumerate(set_piece_desc):
             for idx_char, char in enumerate(line):
                 # exception for empty space
@@ -68,6 +67,100 @@ class BoardClass:
                     return False
         return True
 
+    def check_up(self, position: tuple, line: int, col: int, letter: str) -> str:
+        """checks UP for continuity"""
+
+        if position[0] == 0 and line == 0 and letter in ["L","J","I","up"]:
+            return "False"
+        if position[0] != 0:
+            board_char = self.matrix[position[0] + line - 1, position[1] + col]
+            if board_char == EMPTY_CHAR:
+                return "continue"
+            if (board_char in ['r','7','I',"down"]
+                and letter in ["r","7","-","down","left","right","blank"]):
+                return "False"
+        return "True"
+
+    def check_down(self, position: tuple, line: int, col: int, letter: str) -> str:
+        """checks DOWN for continuity"""
+
+        if position[0] + line == self.height - 1 and letter in ["r","7","I","down"]:
+            return "False"
+        if position[0] + line < self.height - 1:
+            board_char = self.matrix[position[0] + line + 1, position[1] + col]
+            if board_char == EMPTY_CHAR:
+                return "continue"
+            if (board_char in ['L','J','I',"up"]
+                and letter in ["L","J","-","up","left","right","blank"]):
+                return "False"
+        return 'True'
+
+    ### nothing prevents that last square of the new piece to end abruptly
+
+    def check_left(self, position: tuple, line: int, col: int, letter: str) -> str:
+        """checks LEFT for continuity"""
+
+        if position[1] == 0 and col == 0 and letter in ["J","7","-","left"]:
+            return "False"
+
+        if position[1] != 0:
+            board_char = self.matrix[position[0] + line, position[1] + col - 1]
+            if board_char == EMPTY_CHAR:
+                return "continue"
+            if (board_char in ['L','r','-',"right"]
+                and letter in ["L","r","I","right","up","down","blank"]):
+                return "False"
+        return "True"
+
+    def check_right(self, position: tuple, line: int, col: int, letter: str) -> str:
+        """checks RIGHT for continuity"""
+
+        if position[1] + col == self.width - 1 and letter in ["L","r","-","right"]:
+            return "False"
+
+        if position[1] + col < self.width - 1:
+            board_char = self.matrix[position[0] + line, position[1] + col + 1]
+            if board_char == EMPTY_CHAR:
+                return "continue"
+            if (board_char in ['J','7','-',"left"]
+                and letter in ["J","7","I","left","up","down","blank"]):
+                return "False"
+        return 'True'
+
+    def valid_path(self, pos: tuple, desc: list) -> bool:
+        '''checks to see if pathways are respected'''
+
+        for idx_ln, line in enumerate(desc):
+            for idx_char, char in enumerate(line):
+
+                if char == ZERO:
+                    continue
+                # check for compatibility UP
+                status = self.check_up(pos, idx_ln, idx_char, char)
+                if status == "continue":
+                    continue
+                if status == "False":
+                    return False
+                # check for compatibility DOWN
+                status = self.check_down(pos, idx_ln, idx_char, char)
+                if status == "continue":
+                    continue
+                if status == "False":
+                    return False
+                # check for compatibility LEFT
+                status = self.check_left(pos, idx_ln, idx_char, char)
+                if status == "continue":
+                    continue
+                if status == "False":
+                    return False
+                # check for compatibility RIGHT
+                status = self.check_right(pos, idx_ln, idx_char, char)
+                if status == "continue":
+                    continue
+                if status == "False":
+                    return False
+        return True
+
     def add_piece(self, new_piece: tuple[str, str, str, tuple]) -> bool:
         """add a piece to the board"""
 
@@ -76,29 +169,35 @@ class BoardClass:
 
         # check if first cell is empty or nothing is required in that spot
         if not (self.first_cell_free(position) or piece_description[0][0] == ZERO):
-            print(
-                f"This piece {block}, {face} and {rotation} first position is already taken: {position}."
-            )
+            print(new_piece,'corner occupied')
             return False
-
         # check if cell fits on the board
         if not self.respects_board_limits(position, piece_description):
-            print(
-                f"This piece {block}, {face} and {rotation} goes out of bounds when starting on position {position}."
-            )
+            print(new_piece, "border limits")
             return False
-
         # check if space is avalaible
         if not self.space_is_available(position, piece_description):
-            print(
-                f"There is no place for {block}, {face} and {rotation} starting on position {position}."
-            )
+            print(new_piece,"no space")
             return False
         # check if path is broken
+        if not self.valid_path(position,piece_description):
+            print(new_piece,'valid path')
+            return False
 
         # puts piece
         self.set_piece(block, piece_description, position)
-        # self.matrix[] = 1
+
+        return True
+
+    def set_path(self) -> None:
+        """transforms symbols"""
+
+        self.path = np.array(
+            [
+                [char_dct[self.matrix[height, width]] for width in range(self.width)]
+                for height in range(self.height)
+            ]
+        )
 
     def initialise(self, start_map: list[tuple]) -> None:
         """puts first blocks in"""
@@ -109,16 +208,3 @@ class BoardClass:
             # print_board(self.path)
 
         self.set_path()
-        # print_board(self.path)
-
-    def set_path(self) -> None:
-        """transforms symbols"""
-        # for width in range(self.width):
-        #     for height in range(self.height):
-        #         self.path[height,width]=char_dct[self.matrix[height,width]]
-        self.path = np.array(
-            [
-                [char_dct[self.matrix[height, width]] for width in range(self.width)]
-                for height in range(self.height)
-            ]
-        )
