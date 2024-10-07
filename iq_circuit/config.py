@@ -1,9 +1,15 @@
-'''contains the dictionaries and configurations'''
+"""contains the dictionaries and configurations"""
 
 BOARD_WIDTH = 8
 BOARD_HEIGHT = 4
 
-EMPTY_CHAR = " "
+EMPTY_CHAR = "."
+UP = "up"
+DOWN = "down"
+LEFT = "left"
+RIGHT = "right"
+BLANK = "blank"
+ZERO = "0"
 
 char_dct = {
     "L": "┗",
@@ -12,58 +18,169 @@ char_dct = {
     "7": "┓",
     "-": "━",
     "I": "┃",
-
     "o": "◆",
-    "up":"▲",
+    "up": "▲",
     "down": "▼",
     "left": "◀",
     "right": "▶",
-    "blank": "□"
-    }
+    "blank": "□",
+    ".": ".",
+}
 
 piece_dct = {
-    "v1": {
-        "face0": [["down",0],["L","-"]],
-        "face1": [["I",0],["L","-"]]
+    "v": {
+        "face0": {
+            "rotation0": [[DOWN, ZERO], ["L", "-"]],
+            "rotation1": [["r", LEFT], ["I", ZERO]],
+            "rotation2": [["-", "7"], [ZERO, UP]],
+            "rotation3": [[ZERO, "I"], [RIGHT, "J"]],
+            },
+        "face1": {
+            "rotation0": [["I", ZERO], ["L", "-"]],
+            "rotation1": [["r", '-'], ["I", ZERO]],
+            "rotation2": [["-", "7"], [ZERO, "I"]],
+            "rotation3": [[ZERO, "I"], ["-", "J"]],
+            }
         },
-    "v2": {
-        "face0": [["r",0],["L","-"]],
-        "face1": [["right",0],["-","-"]],
+    "^": {
+        "face0": {
+            "rotation0": [["r", ZERO], ["L", "-"]],
+            "rotation1": [["r", LEFT], ["I", ZERO]],
+            "rotation2": [["-", "7"], [ZERO, UP]],
+            "rotation3": [[ZERO, "I"], [RIGHT, "J"]],
+            },
+        "face1": {
+            "rotation0": [[RIGHT, ZERO], ["-", "-"]],
+            "rotation1": [["I", DOWN], ["I", ZERO]],
+            "rotation2": [["-", "-"], [ZERO, LEFT]],
+            "rotation3": [[ZERO, "I"], [UP, "I"]],
+            }
         },
-    "i1": {
-        "face0": [["right","7"]],
-        "face1": [["-","-"]],
-        "face2": [["blank","blank"]]
+    "i": {
+        "face0": {
+            "rotation0": [[RIGHT, "7"]],
+            "rotation1": [[DOWN], ["J"]],
+            "rotation2": [["L", LEFT]],
+            "rotation3": [["r"], [UP]],
+            },
+        "face1": {
+            "rotation0": [["-", "-"]],
+            "rotation1": [["I"], ["I"]],
+            },
+        "face2": {
+            "rotation0": [[BLANK, BLANK]],
+            "rotation1": [[BLANK], [BLANK]],
+            },
         },
-    "i2": {
-        "face0": [["right","-"]],
-        "face1": [["right","-"]],
-        "face2": [["blank","blank"]]
+    "!": {
+        "face0": {
+            "rotation0": [[RIGHT, "-"]],
+            "rotation1": [[DOWN], ["I"]],
+            "rotation2": [["-", LEFT]],
+            "rotation3": [["I"], [UP]],
+            },
+        # VERIFIER CETTE PIECE
+        "face1": {
+            "rotation0": [[RIGHT, "-"]],
+            "rotation1": [[DOWN], ["I"]],
+            "rotation2": [["I", LEFT]],
+            "rotation3": [["I"], [UP]],
+            },        # ********************
+        "face2": {
+            "rotation0": [[BLANK, BLANK]],
+            "rotation1": [[BLANK], [BLANK]],
+            },
         },
-    "I1": {
-        "face0": [["right","-","-"]],
-        "face1": [["-","-","J"]],
-        "face2": [["blank","blank","blank"]]
+    "I": {
+        "face0": {
+            "rotation0": [[RIGHT, "-", "-"]],
+            "rotation1": [[DOWN], ["I"], ["I"]],
+            "rotation2": [["-", "-", LEFT]],
+            "rotation3": [["I"], ["I"], [UP]],
+            },
+        "face1": {
+            "rotation0": [["-", "-", "J"]],
+            "rotation1": [["I"], ["I"], ["L"]],
+            "rotation2": [["r", "-", "-"]],
+            "rotation3": [["7"], ["I"], ["I"]],
+            },
+        "face2": {
+            "rotation0": [[BLANK, BLANK, BLANK]],
+            "rotation1": [[BLANK], [BLANK], [BLANK]],
+            },
         },
-    "I2": {
-        "face0": [["-","J","blank"]],
-        "face1": [["r","left","blank"]],
-        "face2": [["blank","blank","blank"]]
+    "|": {
+        "face0": {
+            "rotation0": [["-", "J", BLANK]],
+            "rotation1": [["I"], ["L"], [BLANK]],
+            "rotation2": [[BLANK, "r", "-"]],
+            "rotation3": [[BLANK], ["7"], ["I"]],
+            },
+        "face1": {
+            "rotation0": [["r", LEFT, BLANK]],
+            "rotation1": [["7"], [UP], [BLANK]],
+            "rotation2": [[BLANK, RIGHT, "J"]],
+            "rotation3": [[BLANK], [DOWN], ["L"]],
+            },
+        "face2": {
+            "rotation0": [[BLANK, BLANK, BLANK]],
+            "rotation1": [[BLANK], [BLANK], [BLANK]],
+            },
         },
     "o": {
-        "face0": [["7","I"],["L","J"]],
-        "face1": [["-","left"],["-","7"]]
+        "face0": {
+            "rotation0": [["7", "I"], ["L", "J"]],
+            "rotation1": [["r", "J"], ["L", "-"]],
+            "rotation2": [["r", "7"], ["I", "L"]],
+            "rotation3": [["-", "7"], ["r", "J"]],
+            },
+        "face1": {
+            "rotation0": [["-", LEFT], ["-", "7"]],
+            "rotation1": [["7"], [UP], [BLANK]],
+            "rotation2": [[BLANK, RIGHT, "J"]],
+            "rotation3": [[BLANK], [DOWN], ["L"]],
+            },
         },
     "L": {
-        "face0": [["I",0,0],["L","-","J"]],
-        "face1": [["r","-","J"],["L",0,0]]
+        "face0": {
+            "rotation0": [["I", ZERO, ZERO], ["L", "-", "J"]],
+            "rotation1": [["r", "-"], ["I", ZERO], ["L", ZERO]],
+            "rotation2": [["r", '-', '7'], [ZERO, ZERO, "I"]],
+            "rotation3": [[ZERO, "7"], [ZERO, "I"], ["-", "J"]],
+            },
+        "face1": {
+            "rotation0": [["r", "-", "J"], ["L", ZERO, ZERO]],
+            "rotation1": [["r", "7"], [ZERO, "I"], [ZERO, "L"]],
+            "rotation2": [[ZERO, ZERO, "7"], ["r", "-", "J"]],
+            "rotation3": [["7", ZERO], ["I", ZERO], ["L", "J"]],
+            },
         },
     "s": {
-        "face0": [[0,"r","left"],["blank","I",0]],
-        "face1": [["r","-",0],[0,"blank","blank"]]
+        "face0": {
+            "rotation0": [[ZERO, "r", LEFT], [BLANK, "I", ZERO]],
+            "rotation1": [[BLANK, ZERO], ["-", "7"], [ZERO, UP]],
+            "rotation2": [[ZERO, "I", BLANK], [RIGHT, "J", ZERO]],
+            "rotation3": [[DOWN, ZERO], ["L", "-"], [ZERO, BLANK]],
+            },
+        "face1": {
+            "rotation0": [["r", "-", ZERO], [ZERO, BLANK, BLANK]],
+            "rotation1": [[ZERO, "7"], [BLANK, "I"], [BLANK, ZERO]],
+            "rotation2": [[BLANK, BLANK, ZERO], [ZERO, "-", "J"]],
+            "rotation3": [[ZERO, BLANK], ["I", BLANK], ["L", ZERO]],
+            },
         },
     "t": {
-        "face0": [[0,"L",0],["L","-","-"]],
-        "face1": [[0,"I",0],["L","J","blank"]]
+        "face0": {
+            "rotation0": [[ZERO, "L", ZERO], ["L", "-", "-"]],
+            "rotation1": [["r", ZERO], ["I", "r"], ["I", ZERO]],
+            "rotation2": [["-", "-", "7"], [ZERO, "7", ZERO]],
+            "rotation3": [[ZERO, "I"], ["J", "I"], [ZERO, "J"]],
+            },
+        "face1": {
+            "rotation0": [[ZERO, "I", ZERO], ["L", "J", BLANK]],
+            "rotation1": [["r", ZERO], ["L", "-"], [BLANK, ZERO]],
+            "rotation2": [[BLANK, "r", "7"], [ZERO, "I", ZERO]],
+            "rotation3": [[ZERO, BLANK], ["-", "7"], [ZERO, "J"]],
+            },
         },
     }
