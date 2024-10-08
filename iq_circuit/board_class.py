@@ -28,9 +28,7 @@ class BoardClass:
             return True
         return False
 
-    def set_piece(
-        self, set_block: str, set_piece_desc: list, set_position: tuple
-    ) -> None:
+    def set_piece(self, set_block: str, set_piece_desc: list, set_position: tuple) -> None:
         """writes into the matrix and the piece map"""
 
         for idx_ln, line in enumerate(set_piece_desc):
@@ -121,13 +119,26 @@ class BoardClass:
             for idxl, line in enumerate(piece):
                 for idxc, char in enumerate(line):
                     board_char = self.matrix[position[0] + idxl + 1, position[1] + idxc]
+
+                    # if board_char in ["L", "J", "I", "up"] and char in [
+                    #     "I",
+                    #     "r",
+                    #     "7",
+                    #     "down",
+                    # ]:
+                    #     continue
+
                     if board_char in ["L", "J", "I", "up"] and char in [
-                        "I",
-                        "r",
-                        "7",
-                        "down",
+                        "-",
+                        "L",
+                        "J",
+                        "left",
+                        "right",
+                        "up",
+                        BLANK
                     ]:
-                        continue
+                        return False
+
                     if board_char == EMPTY_CHAR or char in [
                         ZERO,
                         "up",
@@ -248,7 +259,7 @@ class BoardClass:
             return False
         # check if path is broken
         if not self.valid_path(position, piece_description):
-            print(new_piece, "valid path")
+            print(new_piece, "invalid path")
             return False
 
         # puts piece

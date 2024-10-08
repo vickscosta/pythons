@@ -1,3 +1,4 @@
+
 """contains the starting position"""
 
 from config import  DOWN, LEFT, RIGHT, BLANK
