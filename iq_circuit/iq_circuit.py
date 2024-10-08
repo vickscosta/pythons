@@ -1,4 +1,4 @@
-'''game'''
+"""game"""
 
 import numpy as np
 from config import BOARD_HEIGHT, BOARD_WIDTH, EMPTY_CHAR, piece_dct
@@ -13,7 +13,6 @@ def build_list_of_pieces(block: str) -> list:
 
     for key1, _ in piece_dct[block].items():
         for key2, _ in piece_dct[block][key1].items():
-
             final_list.append((key1, key2))
 
     return final_list
@@ -36,20 +35,29 @@ def main() -> None:
     empty_list = np.argwhere(board.matrix == EMPTY_CHAR)
 
     for block in candidate_bag:
-
         pieces_to_test = build_list_of_pieces(block)
 
         for piece in pieces_to_test:
-
             for position in empty_list:
+                built_piece = tuple(
+                    (
+                        block,
+                        piece[0],
+                        piece[1],
+                        tuple((int(position[0]), int(position[1]))),
+                    )
+                )
 
-                built_piece = tuple((block, piece[0], piece[1], tuple((position[0],position[1]))))
-
-                result = board.add_piece(built_piece)
+                # result = board.add_piece(built_piece)
 
                 # board.add_piece(piece)
 
                 # ("!", "face0", "rotation1", (0, 1)),
+
+    print("\n")
+
+    print_board(board.path)
+
 
 if __name__ == "__main__":
     main()
