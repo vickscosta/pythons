@@ -2,8 +2,7 @@
 
 import sys
 import copy
-import numpy as np
-from config import BOARD_HEIGHT, BOARD_WIDTH, EMPTY_CHAR, piece_dct
+from config import BOARD_HEIGHT, BOARD_WIDTH, piece_dct
 from start_position import original_piece_map
 from board_class import BoardClass, print_board
 
@@ -35,8 +34,7 @@ def solver(bag: list[str], my_board: BoardClass) -> None:
         while pieces_to_test:
             piece = pieces_to_test.pop(0)
 
-            empty_list = np.argwhere(my_board.matrix == EMPTY_CHAR)
-            empty_list = empty_list.tolist()
+            empty_list = [[i, j] for i in range(4) for j in range(8)]
 
             while empty_list:
                 position = empty_list.pop(0)
@@ -46,16 +44,18 @@ def solver(bag: list[str], my_board: BoardClass) -> None:
                     tuple((int(position[0]), int(position[1])))))
 
                 sucess = hyp_board.add_piece(built_piece)
+                # print(".", end="")
                 if sucess:
-                    print(f"{block} added to position {position}")
+                    # print(f"{block} added to position {position}")
                     print_board(hyp_board.path)
                     solver(hyp_bag, hyp_board)
                     if not hyp_bag:
+                        print_board(hyp_board.path)
                         print_board(hyp_board.piece_map)
                         sys.exit() # END SOLUTION
                     hyp_board.remove_piece(built_piece)
 
-        print('Nothing fits with', block)
+        # print('Nothing fits with', block)
         return # we are here if nothing fits
 
 def main() -> None:
