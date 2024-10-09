@@ -135,9 +135,9 @@ piece_dct = {
             },
         "face1": {
             "rotation0": [["-", LEFT], ["-", "7"]],
-            "rotation1": [["7"], [UP], [BLANK]],
-            "rotation2": [[BLANK, RIGHT, "J"]],
-            "rotation3": [[BLANK], [DOWN], ["L"]],
+            "rotation1": [["I", "I"], ["J", UP]],
+            "rotation2": [["L", "-"], [RIGHT, "-"]],
+            "rotation3": [[DOWN, "r"], ["I", "I"]],
             },
         },
     "L": {

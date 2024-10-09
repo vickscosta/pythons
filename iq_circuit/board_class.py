@@ -1,6 +1,7 @@
 """class for board operations"""
 
 import numpy as np
+import copy
 from config import EMPTY_CHAR, ZERO, BLANK, piece_dct, char_dct
 
 
@@ -70,48 +71,43 @@ class BoardClass:
     def check_up(self, position: tuple, piece: list) -> bool:
         """checks UP for continuity"""
 
+        list_of_connectors = ["L", "J", "I", "up"]
+
         # first line limitations
         for char in piece[0]:
-            if position[0] == 0 and char in ["L", "J", "I", "up"]:
+            if position[0] == 0 and char in list_of_connectors:
                 return False
 
         # limitations based on the existing
-        if position[0] > 0:
-            for idxl, line in enumerate(piece):
-                for idxc, char in enumerate(line):
-                    board_char = self.matrix[position[0] + idxl - 1, position[1] + idxc]
-                    if board_char in ["r", "7", "I", "down"] and char in [
-                        "I",
-                        "L",
-                        "J",
-                        "up",
-                    ]:
+        for idxl, line in enumerate(piece):
+            for idxc, char in enumerate(line):
+                if position[0] == 0 and idxl == 0 :
+                    continue
+                board_char = self.matrix[position[0] + idxl - 1, position[1] + idxc]
+
+                if board_char == EMPTY_CHAR:
+                    continue
+
+                if char == ZERO:
+                    continue
+
+                if board_char in ["r", "7", "I", "down"]:
+                    if char in list_of_connectors:
                         continue
-                    if board_char == EMPTY_CHAR or char in [
-                        ZERO,
-                        "down",
-                        "left",
-                        "right",
-                        "r",
-                        "7",
-                        "-",
-                        BLANK
-                    ]:
-                        continue
+                    return False
+
+                if char in list_of_connectors:
                     return False
         return True
 
     def check_down(self, position: tuple, piece: list) -> bool:
         """checks down for continuity"""
 
+        list_of_connectors = ["r", "7", "I", "down"]
+
         # bottom of the board limitations
         for char in piece[-1]:
-            if position[0] + len(piece) == self.height and char in [
-                "r",
-                "7",
-                "I",
-                "down",
-            ]:
+            if position[0] + len(piece) == self.height and char in list_of_connectors:
                 return False
 
         # limitations based on the existing
@@ -120,72 +116,52 @@ class BoardClass:
                 for idxc, char in enumerate(line):
                     board_char = self.matrix[position[0] + idxl + 1, position[1] + idxc]
 
-                    # if board_char in ["L", "J", "I", "up"] and char in [
-                    #     "I",
-                    #     "r",
-                    #     "7",
-                    #     "down",
-                    # ]:
-                    #     continue
+                    if board_char == EMPTY_CHAR:
+                        continue
 
-                    if board_char in ["L", "J", "I", "up"] and char in [
-                        "-",
-                        "L",
-                        "J",
-                        "left",
-                        "right",
-                        "up",
-                        BLANK
-                    ]:
+                    if char == ZERO:
+                        continue
+
+                    if board_char in ["L", "J", "I", "up"]:
+                        if char in list_of_connectors:
+                            continue
                         return False
 
-                    if board_char == EMPTY_CHAR or char in [
-                        ZERO,
-                        "up",
-                        "left",
-                        "right",
-                        "L",
-                        "J",
-                        "-",
-                        BLANK
-                    ]:
-                        continue
-                    return False
+                    if char in list_of_connectors:
+                        return False
         return True
 
     def check_left(self, position: tuple, piece: list) -> bool:
         """checks LEFT for continuity"""
 
+        list_of_connectors = ["J", "7", "-", "left"]
+
         # first column limitations
         if position[1] == 0:
             for line in piece:
                 char = line[0]
-                if char in ["J", "7", "-", "left"]:
+                if char in list_of_connectors:
                     return False
 
         # limitations based on the existing
-        if position[1] > 0:
-            for idxl, line in enumerate(piece):
-                for idxc, char in enumerate(line):
-                    board_char = self.matrix[position[0] + idxl, position[1] + idxc - 1]
-                    if board_char in ["L", "r", "-", "right"] and char in [
-                        "-",
-                        "J",
-                        "7",
-                        "left",
-                    ]:
+        for idxl, line in enumerate(piece):
+            for idxc, char in enumerate(line):
+                if position[1] == 0 and idxc == 0 :
+                    continue
+                board_char = self.matrix[position[0] + idxl, position[1] + idxc - 1]
+
+                if board_char == EMPTY_CHAR:
+                    continue
+
+                if char == ZERO:
+                    continue
+
+                if board_char in ["L", "r", "-", "right"]:
+                    if char in list_of_connectors:
                         continue
-                    if board_char == EMPTY_CHAR or char in [
-                        ZERO,
-                        "down",
-                        "up",
-                        "right",
-                        "L",
-                        "r",
-                        "I",
-                        BLANK
-                    ]:
-                        continue
+                    return False
+
+                if char in list_of_connectors:
                     return False
         return True
 
@@ -235,7 +211,7 @@ class BoardClass:
             return False
         if not self.check_left(pos, desc):
             return False
-        if  not self.check_right(pos, desc):
+        if not self.check_right(pos, desc):
             return False
         return True
 
@@ -264,6 +240,7 @@ class BoardClass:
 
         # puts piece
         self.set_piece(block, piece_description, position)
+        self.set_path()
         # print('*** Added', block, piece_description, position)
 
         return True
@@ -272,11 +249,8 @@ class BoardClass:
         """transforms symbols"""
 
         self.path = np.array(
-            [
-                [char_dct[self.matrix[height, width]] for width in range(self.width)]
-                for height in range(self.height)
-            ]
-        )
+            [[char_dct[self.matrix[height, width]] for width in range(self.width)]
+                for height in range(self.height)])
 
     def initialise(self, start_map: list[tuple]) -> None:
         """puts first blocks in"""
@@ -286,4 +260,26 @@ class BoardClass:
             # self.set_path()
             # print_board(self.path)
 
+        # self.set_path()
+
+    def remove_piece(self, new_piece: tuple[str, str, str, tuple]) -> None:
+        """remove a piece to the board"""
+
+        block, face, rotation, position = new_piece
+        piece_description = piece_dct[block][face][rotation]
+
+        new_piece_description = copy.deepcopy(piece_description)
+
+        block = EMPTY_CHAR
+
+        for idxl, line in enumerate(piece_description):
+            for idxc, char in enumerate(line):
+                if char == ZERO:
+                    new_piece_description[idxl][idxc] = ZERO
+                else:
+                    new_piece_description[idxl][idxc] = EMPTY_CHAR
+
+
+        # removes piece
+        self.set_piece(block, new_piece_description, position)
         self.set_path()

@@ -1,5 +1,6 @@
 """game"""
 
+import sys
 import copy
 import numpy as np
 from config import BOARD_HEIGHT, BOARD_WIDTH, EMPTY_CHAR, piece_dct
@@ -20,74 +21,42 @@ def solver_init() -> list[str]:
     # print("Candidate pieces:", candidate_bag, "\n")
     return bag
 
-def loop_pieces_to_test(test_bag:list, brick:str, mem: list, hbag:list, hboard:list, hempty_list:list) -> tuple:
-    """deals with these loops"""
-
-# TODO
-#    when all the pieces were tried and nothig is good, that means that the previous solution was not good
-
-    for piece in test_bag:
-        for position in hempty_list:
-            built_piece = tuple(
-                (brick,
-                piece[0],
-                piece[1],
-                tuple((int(position[0]), int(position[1]))))                )
-
-            if build_list_of_pieces in mem:
-                continue
-
-            sucess = hboard.add_piece(built_piece)
-            if sucess:
-                mem.append(built_piece)
-                hboard.set_path()
-                print(f"{brick} added to position {position}")
-                hbag.remove(brick)
-                hempty_list = np.argwhere(hboard.matrix == EMPTY_CHAR)
-                return sucess, mem, hbag, hboard, hempty_list
-
-    return sucess, mem, hbag, hboard, hempty_list
-
 def solver(bag: list[str], my_board: BoardClass) -> None:
     """solves it"""
 
-    empty_list = np.argwhere(my_board.matrix == EMPTY_CHAR)
-
     hyp_board = copy.deepcopy(my_board)
-    hyp_empty_list = copy.deepcopy(empty_list)
     hyp_bag = copy.deepcopy(bag)
 
-    memory = []
+    while hyp_bag:
+        block = hyp_bag.pop(0)
 
-    counter=0
-    while np.any(hyp_empty_list) or counter==10:
-        counter += 1
-        for block in hyp_bag:
-            pieces_to_test = build_list_of_pieces(block)
-            status = False
+        pieces_to_test = build_list_of_pieces(block)
 
-            status, memory, hyp_bag, hyp_board, hyp_empty_list = loop_pieces_to_test(pieces_to_test, block, memory, hyp_bag, hyp_board, hyp_empty_list)
-            if status:
-                continue
+        while pieces_to_test:
+            piece = pieces_to_test.pop(0)
 
-            # for piece in pieces_to_test:
-            #     for position in hyp_empty_list:
-            #         built_piece = tuple(
-            #             (block,
-            #             piece[0],
-            #             piece[1],
-            #             tuple((int(position[0]), int(position[1]))))                )
+            empty_list = np.argwhere(my_board.matrix == EMPTY_CHAR)
+            empty_list = empty_list.tolist()
 
-            #         status = hyp_board.add_piece(built_piece)
-            #         if status:
-            #             hyp_board.set_path()
-            #             print(f"{block} added to position {position}")
-            #             hyp_bag.remove(block)
-            #             hyp_empty_list = np.argwhere(hyp_board.matrix == EMPTY_CHAR)
-            #             break
-    print('hello')
+            while empty_list:
+                position = empty_list.pop(0)
 
+                built_piece = tuple(
+                    (block, piece[0], piece[1],
+                    tuple((int(position[0]), int(position[1])))))
 
+                sucess = hyp_board.add_piece(built_piece)
+                if sucess:
+                    print(f"{block} added to position {position}")
+                    print_board(hyp_board.path)
+                    solver(hyp_bag, hyp_board)
+                    if not hyp_bag:
+                        print_board(hyp_board.piece_map)
+                        sys.exit() # END SOLUTION
+                    hyp_board.remove_piece(built_piece)
+
+        print('Nothing fits with', block)
+        return # we are here if nothing fits
 
 def main() -> None:
     """does the main thing"""
