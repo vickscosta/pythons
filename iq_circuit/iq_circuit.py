@@ -6,11 +6,6 @@ from config import BOARD_HEIGHT, BOARD_WIDTH, piece_dct
 from start_position import original_piece_map
 from board_class import BoardClass, print_board
 
-
-def build_list_of_pieces(block: str) -> list:
-    """makes a list of hyphoteses to test"""
-    return [(key1, key2) for key1 in piece_dct[block] for key2 in piece_dct[block][key1]]
-
 def solver_init() -> list[str]:
     '''initializes the solver'''
 
@@ -28,17 +23,16 @@ def solver(bag: list[str], my_board: BoardClass) -> None:
 
     while hyp_bag:
         block = hyp_bag.pop(0)
-
-        pieces_to_test = build_list_of_pieces(block)
+        pieces_to_test = [(key1, key2)
+                          for key1 in piece_dct[block]
+                          for key2 in piece_dct[block][key1]]
 
         while pieces_to_test:
             piece = pieces_to_test.pop(0)
-
             empty_list = [[i, j] for i in range(4) for j in range(8)]
 
             while empty_list:
                 position = empty_list.pop(0)
-
                 built_piece = tuple(
                     (block, piece[0], piece[1],
                     tuple((int(position[0]), int(position[1])))))
@@ -47,7 +41,7 @@ def solver(bag: list[str], my_board: BoardClass) -> None:
                 # print(".", end="")
                 if sucess:
                     # print(f"{block} added to position {position}")
-                    print_board(hyp_board.path)
+                    # print_board(hyp_board.path)
                     solver(hyp_bag, hyp_board)
                     if not hyp_bag:
                         print_board(hyp_board.path)

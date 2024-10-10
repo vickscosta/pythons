@@ -2,8 +2,19 @@
 
 import copy
 import numpy as np
-from config import EMPTY_CHAR, ZERO, BLANK, piece_dct, char_dct
+from config import EMPTY_CHAR, ZERO, piece_dct, char_dct
 
+connector_dict = {
+    "UP":["L", "J", "I", "up"],
+    "DOWN": ["r", "7", "I", "down"],
+    "LEFT": ["J", "7", "-", "left"],
+    "RIGHT": ["L", "r", "-", "right"]}
+
+board_connector_dict = {
+    "UP": connector_dict["DOWN"],
+    "DOWN": connector_dict["UP"],
+    "LEFT": connector_dict["RIGHT"],
+    "RIGHT": connector_dict["LEFT"]}
 
 def print_board(board: np) -> None:
     """prints evething"""
@@ -68,22 +79,46 @@ class BoardClass:
                     return False
         return True
 
-    def check_up(self, position: tuple, piece: list) -> bool:
-        """checks UP for continuity"""
+    def edge_case_limitations(self, direction: str, position: tuple, piece: list) -> bool:
+        '''checks for continuity in edge cases'''
 
-        list_of_connectors = ["L", "J", "I", "up"]
+        edge_conditions = {
+            "UP": [position[0], 0, piece[0]],
+            "DOWN": [position[0] + len(piece), self.height, piece[-1]],
+            "LEFT": [position[1], 0, piece, 0],
+            "RIGHT": [position[1] + len(piece[0]), self.width, piece, -1]}
 
-        # first line limitations
-        for char in piece[0]:
-            if position[0] == 0 and char in list_of_connectors:
-                return False
+        if edge_conditions[direction][0] == edge_conditions[direction][1]:
+            for char in edge_conditions[direction][2]:
+                if (direction in ["UP","DOWN"]
+                    and char in connector_dict[direction]):
+                    return False
+                if (direction in ["LEFT","RIGHT"]
+                    and char[edge_conditions[direction][3]] in connector_dict[direction]):
+                    return False
+        return True
 
-        # limitations based on the existing
+    def board_limitations(self, direction: str, position: tuple, piece: list) -> bool:
+        '''checks for continuity in edge cases'''
+
+        conditions = {"UP": -1,"DOWN": +1,"LEFT": -1,"RIGHT": +1}
+
         for idxl, line in enumerate(piece):
             for idxc, char in enumerate(line):
-                if position[0] == 0 and idxl == 0 :
-                    continue
-                board_char = self.matrix[position[0] + idxl - 1, position[1] + idxc]
+                if direction in ["UP","DOWN"]:
+                    try:
+                        board_char = self.matrix[
+                            position[0] + idxl + conditions[direction],
+                            position[1] + idxc]
+                    except IndexError:
+                        continue
+                else:
+                    try:
+                        board_char = self.matrix[
+                            position[0] + idxl,
+                            position[1] + idxc + conditions[direction]]
+                    except IndexError:
+                        continue
 
                 if board_char == EMPTY_CHAR:
                     continue
@@ -91,107 +126,36 @@ class BoardClass:
                 if char == ZERO:
                     continue
 
-                if board_char in ["r", "7", "I", "down"]:
-                    if char in list_of_connectors:
+                if board_char in board_connector_dict[direction]:
+                    if char in connector_dict[direction]:
                         continue
                     return False
 
-                if char in list_of_connectors:
+                if char in connector_dict[direction]:
                     return False
+
         return True
 
-    def check_down(self, position: tuple, piece: list) -> bool:
-        """checks down for continuity"""
+    def generic_check(self, direction: str, position: tuple, piece: list) -> bool:
+        """generic function to check path continuity"""
 
-        list_of_connectors = ["r", "7", "I", "down"]
-        # bottom of the board limitations
-        for char in piece[-1]:
-            if position[0] + len(piece) == self.height and char in list_of_connectors:
-                return False
-        # limitations based on the existing
-        if position[0] + len(piece) < self.height:
-            for idxl, line in enumerate(piece):
-                for idxc, char in enumerate(line):
-                    board_char = self.matrix[position[0] + idxl + 1, position[1] + idxc]
-                    if board_char == EMPTY_CHAR:
-                        continue
-                    if char == ZERO:
-                        continue
-                    if board_char in ["L", "J", "I", "up"]:
-                        if char in list_of_connectors:
-                            continue
-                        return False
-                    if char in list_of_connectors:
-                        return False
-        return True
-
-    def check_left(self, position: tuple, piece: list) -> bool:
-        """checks LEFT for continuity"""
-
-        list_of_connectors = ["J", "7", "-", "left"]
-        # first column limitations
-        if position[1] == 0:
-            for line in piece:
-                char = line[0]
-                if char in list_of_connectors:
-                    return False
-        # limitations based on the existing
-        for idxl, line in enumerate(piece):
-            for idxc, char in enumerate(line):
-                if position[1] == 0 and idxc == 0 :
-                    continue
-                board_char = self.matrix[position[0] + idxl, position[1] + idxc - 1]
-                if board_char == EMPTY_CHAR:
-                    continue
-                if char == ZERO:
-                    continue
-                if board_char in ["L", "r", "-", "right"]:
-                    if char in list_of_connectors:
-                        continue
-                    return False
-                if char in list_of_connectors:
-                    return False
-        return True
-
-    def check_right(self, position: tuple, piece: list) -> bool:
-        """checks right for continuity"""
-
-        list_of_connectors = ["L", "r", "-", "right"]
-        # last column limitations
-        if position[1] + len(piece[0]) == self.width:
-            for line in piece:
-                char = line[-1]
-                if char in list_of_connectors:
-                    return False
-        # limitations based on the existing
-        for idxl, line in enumerate(piece):
-            for idxc, char in enumerate(line):
-                if position[1] + len(piece[0]) == self.width:
-                    continue
-                board_char = self.matrix[position[0] + idxl, position[1] + idxc + 1]
-                if board_char == EMPTY_CHAR:
-                    continue
-                if char == ZERO:
-                    continue
-                if board_char in ["J", "7", "-", "left"]:
-                    if char in list_of_connectors:
-                        continue
-                    return False
-                if char in list_of_connectors:
-                    return False
+        if not self.edge_case_limitations(direction, position, piece):
+            return False
+        if not self.board_limitations(direction, position, piece):
+            return False
         return True
 
     def valid_path(self, pos: tuple, desc: list) -> bool:
         """checks to see if pathways are respected"""
 
         # check for compatibility
-        if not self.check_up(pos, desc):
+        if not self.generic_check("UP", pos, desc):
             return False
-        if not self.check_down(pos, desc):
+        if not self.generic_check("DOWN", pos, desc):
             return False
-        if not self.check_left(pos, desc):
+        if not self.generic_check("LEFT", pos, desc):
             return False
-        if not self.check_right(pos, desc):
+        if not self.generic_check("RIGHT", pos, desc):
             return False
         return True
 

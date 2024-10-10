@@ -42,9 +42,9 @@ piece_dct = {
     "^": {
         "face0": {
             "rotation0": [["r", ZERO], ["L", "-"]],
-            "rotation1": [["r", LEFT], ["I", ZERO]],
-            "rotation2": [["-", "7"], [ZERO, UP]],
-            "rotation3": [[ZERO, "I"], [RIGHT, "J"]]},
+            "rotation1": [["r", "7"], ["I", ZERO]],
+            "rotation2": [["-", "7"], [ZERO, "J"]],
+            "rotation3": [[ZERO, "I"], ["L", "J"]]},
         "face1": {
             "rotation0": [[RIGHT, ZERO], ["-", "-"]],
             "rotation1": [["I", DOWN], ["I", ZERO]],
